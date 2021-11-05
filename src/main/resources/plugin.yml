@@ -1,0 +1,7 @@
+name: Economy
+version: '${project.version}'
+main: codes.ndm.simple.Economy
+api-version: 1.17
+authors: [ boiski ]
+description: A simple economy plugin
+website: ndm.codes
