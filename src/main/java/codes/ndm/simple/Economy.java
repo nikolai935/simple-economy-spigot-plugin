@@ -1,5 +1,6 @@
 package codes.ndm.simple;
 
+import codes.ndm.simple.commands.BalanceCommand;
 import codes.ndm.simple.events.PlayerJoin;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -16,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public final class Economy extends JavaPlugin {
     private MongoClient mongoClient;
     private MongoDatabase database;
@@ -28,6 +31,7 @@ public final class Economy extends JavaPlugin {
         connect();
 
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+        this.getCommand("balance").setExecutor(new BalanceCommand(this));
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin Enabled");
     }
@@ -54,6 +58,16 @@ public final class Economy extends JavaPlugin {
             userCollection.insertOne(doc);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public int getMoney(UUID uuid) {
+        try {
+            Document r = userCollection.find(eq("uuid", uuid.toString())).first();
+            return r.getInteger("money");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }
