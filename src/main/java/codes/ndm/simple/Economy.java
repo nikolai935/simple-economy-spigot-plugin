@@ -1,6 +1,8 @@
 package codes.ndm.simple;
 
 import codes.ndm.simple.commands.BalanceCommand;
+import codes.ndm.simple.commands.GenerateCommand;
+import codes.ndm.simple.commands.SetCommand;
 import codes.ndm.simple.events.PlayerJoin;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -19,6 +21,7 @@ import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.inc;
+import static com.mongodb.client.model.Updates.set;
 
 public final class Economy extends JavaPlugin {
     private MongoClient mongoClient;
@@ -33,6 +36,8 @@ public final class Economy extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
         this.getCommand("balance").setExecutor(new BalanceCommand(this));
+        this.getCommand("generate").setExecutor(new GenerateCommand(this));
+        this.getCommand("set").setExecutor(new SetCommand(this));
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Plugin Enabled");
     }
@@ -75,6 +80,14 @@ public final class Economy extends JavaPlugin {
     public void generateMoney(UUID uuid, int amount) {
         try {
             userCollection.findOneAndUpdate(eq("uuid", uuid.toString()), inc("money", amount));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMoney(UUID uuid, int amount) {
+        try {
+            userCollection.findOneAndUpdate(eq("uuid", uuid.toString()), set("money", 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
