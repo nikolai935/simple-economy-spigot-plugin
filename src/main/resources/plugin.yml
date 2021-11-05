@@ -5,3 +5,20 @@ api-version: 1.17
 authors: [ boiski ]
 description: A simple economy plugin
 website: ndm.codes
+commands:
+  balance:
+    description: Gived the balance back to the player
+    usage: /balance <player>
+    aliases: bal
+    permission: balance.use
+
+  generate:
+    description: Generated money
+    usage: /generate <player> <amount>
+    aliases: gen
+    permission: generate.use
+
+  set:
+    description: Sets money
+    usage: /set <player> <amount>
+    permission: set.use
