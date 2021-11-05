@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.inc;
 
 public final class Economy extends JavaPlugin {
     private MongoClient mongoClient;
@@ -68,6 +69,14 @@ public final class Economy extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    public void generateMoney(UUID uuid, int amount) {
+        try {
+            userCollection.findOneAndUpdate(eq("uuid", uuid.toString()), inc("money", amount));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
